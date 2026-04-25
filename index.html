@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Paperclip Web — Crafting digital experiences that grow your business. Professional web design and development." />
+  <title>Paperclip Web — Digital Experiences That Deliver</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:wght@700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav-wrapper" id="nav">
+    <nav class="nav container">
+      <a href="#" class="nav__logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2zm0 4a8 8 0 110 16A8 8 0 0114 6zm0 3a5 5 0 100 10A5 5 0 0014 9zm0 2a3 3 0 110 6 3 3 0 010-6z" fill="currentColor"/>
+        </svg>
+        Paperclip Web
+      </a>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#capabilities" class="nav__link">Capabilities</a></li>
+        <li><a href="#process" class="nav__link">Process</a></li>
+        <li><a href="#work" class="nav__link">Work</a></li>
+        <li><a href="#contact" class="nav__cta">Start a Project</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__orb hero__orb--1"></div>
+        <div class="hero__orb hero__orb--2"></div>
+        <div class="hero__orb hero__orb--3"></div>
+      </div>
+      <div class="container hero__content">
+        <div class="hero__badge" data-animate="fade-up">
+          <span class="badge">Available for new projects</span>
+        </div>
+        <h1 class="hero__headline" data-animate="fade-up" data-delay="100">
+          Digital experiences<br/>that <em>actually</em> deliver
+        </h1>
+        <p class="hero__sub" data-animate="fade-up" data-delay="200">
+          We build fast, beautiful, and conversion-focused websites for ambitious businesses. From strategy through launch — and everything after.
+        </p>
+        <div class="hero__actions" data-animate="fade-up" data-delay="300">
+          <a href="#contact" class="btn btn--primary">Start your project</a>
+          <a href="#work" class="btn btn--ghost">See our work</a>
+        </div>
+        <div class="hero__stats" data-animate="fade-up" data-delay="400">
+          <div class="stat">
+            <span class="stat__number">50+</span>
+            <span class="stat__label">Projects delivered</span>
+          </div>
+          <div class="stat__divider"></div>
+          <div class="stat">
+            <span class="stat__number">98%</span>
+            <span class="stat__label">Client satisfaction</span>
+          </div>
+          <div class="stat__divider"></div>
+          <div class="stat">
+            <span class="stat__number">&lt;2s</span>
+            <span class="stat__label">Average load time</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero__scroll" aria-hidden="true">
+        <span>Scroll</span>
+        <svg width="16" height="24" viewBox="0 0 16 24"><rect x="6" y="0" width="4" height="10" rx="2" fill="currentColor" opacity="0.4"/><path d="M8 14l-4 4h8l-4-4z" fill="currentColor"/></svg>
+      </div>
+    </section>
+
+    <!-- Logos -->
+    <section class="logos section--tight">
+      <div class="container">
+        <p class="logos__label">Trusted by growth-stage companies</p>
+        <div class="logos__track">
+          <div class="logos__inner">
+            <span class="logo-item">Horizon Foods</span>
+            <span class="logo-item">Volta Energy</span>
+            <span class="logo-item">Crestline Capital</span>
+            <span class="logo-item">Apex Logistics</span>
+            <span class="logo-item">Meraki Studio</span>
+            <span class="logo-item">Northgate Tech</span>
+            <span class="logo-item">Horizon Foods</span>
+            <span class="logo-item">Volta Energy</span>
+            <span class="logo-item">Crestline Capital</span>
+            <span class="logo-item">Apex Logistics</span>
+            <span class="logo-item">Meraki Studio</span>
+            <span class="logo-item">Northgate Tech</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capabilities -->
+    <section class="capabilities section" id="capabilities">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-tag">What we do</span>
+          <h2 class="section-title">End-to-end web <br/>development expertise</h2>
+          <p class="section-desc">We cover every layer of the web — from pixel-perfect design to scalable back-end architecture.</p>
+        </div>
+        <div class="capabilities__grid">
+          <div class="cap-card" data-animate="fade-up" data-delay="0">
+            <div class="cap-card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="2" y="6" width="28" height="20" rx="3" stroke="currentColor" stroke-width="2"/><path d="M9 13l4 4-4 4M17 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Custom Web Development</h3>
+            <p>Bespoke sites and applications built to your exact requirements. TypeScript, React, Next.js, and Node — the modern full-stack.</p>
+            <ul class="cap-card__tags">
+              <li>React / Next.js</li><li>TypeScript</li><li>Node.js</li>
+            </ul>
+          </div>
+          <div class="cap-card" data-animate="fade-up" data-delay="100">
+            <div class="cap-card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><path d="M10 16s2-4 6-4 6 4 6 4-2 4-6 4-6-4-6-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>
+            </div>
+            <h3>UI/UX Design</h3>
+            <p>Research-driven design that guides users to the right action. Wireframes, high-fidelity prototypes, and polished design systems.</p>
+            <ul class="cap-card__tags">
+              <li>Figma</li><li>Design Systems</li><li>User Research</li>
+            </ul>
+          </div>
+          <div class="cap-card" data-animate="fade-up" data-delay="200">
+            <div class="cap-card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 26V16a10 10 0 0120 0v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="2" y="20" width="6" height="8" rx="2" stroke="currentColor" stroke-width="2"/><rect x="24" y="20" width="6" height="8" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <h3>E-Commerce</h3>
+            <p>High-converting online stores built on Shopify, or fully custom. Optimised checkout flows, inventory management, and payment integrations.</p>
+            <ul class="cap-card__tags">
+              <li>Shopify</li><li>Stripe</li><li>Headless</li>
+            </ul>
+          </div>
+          <div class="cap-card" data-animate="fade-up" data-delay="0">
+            <div class="cap-card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M4 16h24M4 8h24M4 24h24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="10" cy="16" r="3" fill="var(--color-bg)" stroke="currentColor" stroke-width="2"/><circle cx="22" cy="8" r="3" fill="var(--color-bg)" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="24" r="3" fill="var(--color-bg)" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <h3>CMS &amp; Content</h3>
+            <p>Empower your team to publish without a developer. We implement and customise Sanity, Contentful, and other headless CMS platforms.</p>
+            <ul class="cap-card__tags">
+              <li>Sanity</li><li>Contentful</li><li>Headless CMS</li>
+            </ul>
+          </div>
+          <div class="cap-card" data-animate="fade-up" data-delay="100">
+            <div class="cap-card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 4l10 6v12l-10 6L6 22V10l10-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 4v24M6 10l10 6 10-6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Performance &amp; SEO</h3>
+            <p>Lighthouse 95+ scores, Core Web Vitals green across the board. We build fast by default and optimise everything for organic growth.</p>
+            <ul class="cap-card__tags">
+              <li>Core Web Vitals</li><li>Technical SEO</li><li>Analytics</li>
+            </ul>
+          </div>
+          <div class="cap-card" data-animate="fade-up" data-delay="200">
+            <div class="cap-card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 12h24" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1" fill="currentColor"/><circle cx="12" cy="10" r="1" fill="currentColor"/><circle cx="16" cy="10" r="1" fill="currentColor"/></svg>
+            </div>
+            <h3>Support &amp; Retainers</h3>
+            <p>We're in it for the long term. Retainer packages cover ongoing development, security updates, hosting management, and growth experiments.</p>
+            <ul class="cap-card__tags">
+              <li>Monitoring</li><li>A/B Testing</li><li>Iterative Dev</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process -->
+    <section class="process section" id="process">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-tag">How we work</span>
+          <h2 class="section-title">A clear process, <br/>no surprises</h2>
+          <p class="section-desc">Every engagement follows our proven four-phase methodology — built for clarity, quality, and speed.</p>
+        </div>
+        <div class="process__steps">
+          <div class="process-step" data-animate="fade-right" data-delay="0">
+            <div class="process-step__number">01</div>
+            <div class="process-step__body">
+              <h3>Discovery &amp; Strategy</h3>
+              <p>We start by understanding your business, users, and goals. Stakeholder interviews, competitive analysis, and a clear project brief before a single line of code is written.</p>
+              <div class="process-step__deliverables">
+                <strong>Deliverables:</strong> Project brief · Technical spec · Timeline
+              </div>
+            </div>
+          </div>
+          <div class="process-step" data-animate="fade-right" data-delay="100">
+            <div class="process-step__number">02</div>
+            <div class="process-step__body">
+              <h3>Design &amp; Prototype</h3>
+              <p>Wireframes first, then high-fidelity designs in Figma. We iterate with you until everything is exactly right before handing off to development.</p>
+              <div class="process-step__deliverables">
+                <strong>Deliverables:</strong> Wireframes · Design system · Interactive prototype
+              </div>
+            </div>
+          </div>
+          <div class="process-step" data-animate="fade-right" data-delay="200">
+            <div class="process-step__number">03</div>
+            <div class="process-step__body">
+              <h3>Build &amp; Review</h3>
+              <p>Agile two-week sprints with regular demos. You see real progress every fortnight. Automated testing, code review, and a staging environment throughout.</p>
+              <div class="process-step__deliverables">
+                <strong>Deliverables:</strong> Sprint demos · Staging site · Test coverage
+              </div>
+            </div>
+          </div>
+          <div class="process-step" data-animate="fade-right" data-delay="300">
+            <div class="process-step__number">04</div>
+            <div class="process-step__body">
+              <h3>Launch &amp; Grow</h3>
+              <p>Zero-downtime deployment, analytics setup, and a handover session so your team is confident day one. Then we stay on as your ongoing partner.</p>
+              <div class="process-step__deliverables">
+                <strong>Deliverables:</strong> Live site · Analytics · Training · Retainer
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Work / Portfolio -->
+    <section class="work section" id="work">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-tag">Our work</span>
+          <h2 class="section-title">Projects we're proud of</h2>
+          <p class="section-desc">A selection of recent client work across industries and disciplines.</p>
+        </div>
+        <div class="work__grid">
+          <article class="project-card project-card--featured" data-animate="fade-up">
+            <div class="project-card__visual" style="--accent: #6366f1">
+              <div class="project-card__mockup">
+                <div class="mockup-browser">
+                  <div class="mockup-browser__bar"><span></span><span></span><span></span></div>
+                  <div class="mockup-browser__content" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)">
+                    <div class="mockup-text"></div>
+                    <div class="mockup-text mockup-text--short"></div>
+                    <div class="mockup-cards">
+                      <div class="mockup-card"></div>
+                      <div class="mockup-card"></div>
+                      <div class="mockup-card"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-card__body">
+              <span class="project-tag">E-Commerce · Shopify</span>
+              <h3>Horizon Foods</h3>
+              <p>A full rebrand and Shopify rebuild for a premium food subscription brand. Conversion rate improved by 34% in the first month post-launch.</p>
+              <div class="project-card__metrics">
+                <span><strong>+34%</strong> CVR</span>
+                <span><strong>1.4s</strong> LCP</span>
+                <span><strong>98</strong> Lighthouse</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card" data-animate="fade-up" data-delay="100">
+            <div class="project-card__visual" style="--accent: #10b981">
+              <div class="project-card__mockup project-card__mockup--small">
+                <div class="mockup-browser">
+                  <div class="mockup-browser__bar"><span></span><span></span><span></span></div>
+                  <div class="mockup-browser__content" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%)">
+                    <div class="mockup-chart">
+                      <div class="mockup-bar" style="height:40%"></div>
+                      <div class="mockup-bar" style="height:70%"></div>
+                      <div class="mockup-bar" style="height:55%"></div>
+                      <div class="mockup-bar" style="height:90%"></div>
+                      <div class="mockup-bar" style="height:65%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-card__body">
+              <span class="project-tag">SaaS Dashboard · React</span>
+              <h3>Volta Energy</h3>
+              <p>Real-time energy monitoring dashboard for commercial clients with complex data visualisation and alerting.</p>
+            </div>
+          </article>
+
+          <article class="project-card" data-animate="fade-up" data-delay="200">
+            <div class="project-card__visual" style="--accent: #f59e0b">
+              <div class="project-card__mockup project-card__mockup--small">
+                <div class="mockup-browser">
+                  <div class="mockup-browser__bar"><span></span><span></span><span></span></div>
+                  <div class="mockup-browser__content" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%)">
+                    <div class="mockup-hero-block">
+                      <div class="mockup-text"></div>
+                      <div class="mockup-text mockup-text--short"></div>
+                      <div class="mockup-btn"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-card__body">
+              <span class="project-tag">Corporate · Next.js</span>
+              <h3>Crestline Capital</h3>
+              <p>Full website redesign for a private equity firm. Sophisticated design, Sanity CMS, and WCAG AA accessibility.</p>
+            </div>
+          </article>
+
+          <article class="project-card" data-animate="fade-up" data-delay="300">
+            <div class="project-card__visual" style="--accent: #ef4444">
+              <div class="project-card__mockup project-card__mockup--small">
+                <div class="mockup-browser">
+                  <div class="mockup-browser__bar"><span></span><span></span><span></span></div>
+                  <div class="mockup-browser__content" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%)">
+                    <div class="mockup-map">
+                      <div class="mockup-pin"></div>
+                      <div class="mockup-pin mockup-pin--2"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-card__body">
+              <span class="project-tag">Logistics Platform · Node.js</span>
+              <h3>Apex Logistics</h3>
+              <p>Booking and tracking platform replacing a legacy system — handling 5,000+ daily active users post-launch.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials section" id="testimonials">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-tag">Kind words</span>
+          <h2 class="section-title">What our clients say</h2>
+        </div>
+        <div class="testimonials__grid">
+          <blockquote class="testimonial" data-animate="fade-up" data-delay="0">
+            <div class="testimonial__stars" aria-label="5 stars">★★★★★</div>
+            <p>"Working with Paperclip Web transformed how we present ourselves online. The team's attention to detail and technical depth is unlike anything we've experienced with other agencies."</p>
+            <footer>
+              <div class="testimonial__avatar" aria-hidden="true">SL</div>
+              <div>
+                <strong>Sarah Lim</strong>
+                <span>CEO, Horizon Foods</span>
+              </div>
+            </footer>
+          </blockquote>
+          <blockquote class="testimonial" data-animate="fade-up" data-delay="100">
+            <div class="testimonial__stars" aria-label="5 stars">★★★★★</div>
+            <p>"They didn't just build what we asked for — they challenged our assumptions, improved our brief, and delivered something better than we imagined. Highly recommend."</p>
+            <footer>
+              <div class="testimonial__avatar" aria-hidden="true">JK</div>
+              <div>
+                <strong>James Keane</strong>
+                <span>CTO, Volta Energy</span>
+              </div>
+            </footer>
+          </blockquote>
+          <blockquote class="testimonial" data-animate="fade-up" data-delay="200">
+            <div class="testimonial__stars" aria-label="5 stars">★★★★★</div>
+            <p>"Our new site launched on time and on budget. Three months later, organic traffic is up 60% and our sales team tells us prospects comment on the site every single call."</p>
+            <footer>
+              <div class="testimonial__avatar" aria-hidden="true">MP</div>
+              <div>
+                <strong>Marcus Park</strong>
+                <span>Head of Marketing, Crestline Capital</span>
+              </div>
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive demo: tabs -->
+    <section class="tech-stack section" id="tech">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-tag">Technology</span>
+          <h2 class="section-title">Built on the right stack</h2>
+          <p class="section-desc">We pick the right tools for each project — but always from a curated set we know deeply.</p>
+        </div>
+        <div class="tabs" data-animate="fade-up">
+          <div class="tabs__nav" role="tablist">
+            <button class="tabs__tab tabs__tab--active" role="tab" aria-selected="true" data-tab="frontend">Frontend</button>
+            <button class="tabs__tab" role="tab" aria-selected="false" data-tab="backend">Backend</button>
+            <button class="tabs__tab" role="tab" aria-selected="false" data-tab="infra">Infrastructure</button>
+            <button class="tabs__tab" role="tab" aria-selected="false" data-tab="tooling">Tooling</button>
+          </div>
+          <div class="tabs__panels">
+            <div class="tabs__panel tabs__panel--active" id="tab-frontend" role="tabpanel">
+              <div class="tech-grid">
+                <div class="tech-item"><div class="tech-item__icon" style="color:#61dafb">⬡</div><span>React</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#000">▲</div><span>Next.js</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#3178c6">TS</div><span>TypeScript</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#38bdf8">≋</div><span>Tailwind CSS</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#e34f26">⬤</div><span>HTML5</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#264de4">⬤</div><span>CSS3</span></div>
+              </div>
+            </div>
+            <div class="tabs__panel" id="tab-backend" role="tabpanel">
+              <div class="tech-grid">
+                <div class="tech-item"><div class="tech-item__icon" style="color:#68a063">⬡</div><span>Node.js</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#000">▲</div><span>Fastify</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#336791">⬤</div><span>PostgreSQL</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#dc382d">⬤</div><span>Redis</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#3ecf8e">▲</div><span>Supabase</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#f05032">⬡</div><span>REST / GraphQL</span></div>
+              </div>
+            </div>
+            <div class="tabs__panel" id="tab-infra" role="tabpanel">
+              <div class="tech-grid">
+                <div class="tech-item"><div class="tech-item__icon" style="color:#000">▲</div><span>Vercel</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#f38020">⬡</div><span>Cloudflare</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#ff9900">⬡</div><span>AWS</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#2496ed">⬤</div><span>Docker</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#326ce5">⬤</div><span>Kubernetes</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#f05032">⬡</div><span>GitHub Actions</span></div>
+              </div>
+            </div>
+            <div class="tabs__panel" id="tab-tooling" role="tabpanel">
+              <div class="tech-grid">
+                <div class="tech-item"><div class="tech-item__icon" style="color:#a259ff">⬡</div><span>Figma</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#f03e2f">⬡</div><span>Sanity CMS</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#175bdc">⬡</div><span>Contentful</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#7950f2">⬡</div><span>Stripe</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#3ecf8e">⬡</div><span>Playwright</span></div>
+                <div class="tech-item"><div class="tech-item__icon" style="color:#c21325">⬡</div><span>Jest / Vitest</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / Contact -->
+    <section class="cta-section section" id="contact">
+      <div class="container">
+        <div class="cta-card" data-animate="fade-up">
+          <div class="cta-card__content">
+            <span class="section-tag">Get in touch</span>
+            <h2>Ready to build something great?</h2>
+            <p>Tell us about your project. We'll get back to you within one business day.</p>
+          </div>
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Your name</label>
+                <input type="text" id="name" name="name" placeholder="Jane Smith" required autocomplete="name" />
+                <span class="form-error" id="nameError"></span>
+              </div>
+              <div class="form-group">
+                <label for="email">Work email</label>
+                <input type="email" id="email" name="email" placeholder="jane@company.com" required autocomplete="email" />
+                <span class="form-error" id="emailError"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" placeholder="Your company name" autocomplete="organization" />
+            </div>
+            <div class="form-group">
+              <label for="budget">Approximate budget</label>
+              <select id="budget" name="budget">
+                <option value="">Select a range</option>
+                <option>Under £10k</option>
+                <option>£10k – £25k</option>
+                <option>£25k – £50k</option>
+                <option>£50k – £100k</option>
+                <option>£100k+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Project brief</label>
+              <textarea id="message" name="message" rows="4" placeholder="Tell us what you're building, your timeline, and any specific requirements..." required></textarea>
+              <span class="form-error" id="messageError"></span>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full">
+              <span class="btn__text">Send enquiry</span>
+              <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="form-note">No spam. We respond within 24 hours.</p>
+          </form>
+          <div class="contact-success" id="contactSuccess" aria-live="polite">
+            <div class="success-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2"/><path d="M14 24l8 8 12-16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Message received!</h3>
+            <p>Thanks for reaching out. We'll be in touch within one business day.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="#" class="nav__logo">
+            <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2zm0 4a8 8 0 110 16A8 8 0 0114 6zm0 3a5 5 0 100 10A5 5 0 0014 9zm0 2a3 3 0 110 6 3 3 0 010-6z" fill="currentColor"/></svg>
+            Paperclip Web
+          </a>
+          <p>Crafting digital experiences that grow your business.</p>
+        </div>
+        <div class="footer__links">
+          <div class="footer__col">
+            <h4>Services</h4>
+            <ul>
+              <li><a href="#capabilities">Web Development</a></li>
+              <li><a href="#capabilities">UI/UX Design</a></li>
+              <li><a href="#capabilities">E-Commerce</a></li>
+              <li><a href="#capabilities">Support &amp; Retainers</a></li>
+            </ul>
+          </div>
+          <div class="footer__col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#work">Our Work</a></li>
+              <li><a href="#process">Process</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; 2026 Paperclip Web. All rights reserved.</p>
+        <div class="footer__legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
