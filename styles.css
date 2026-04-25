@@ -36,6 +36,27 @@
   --section-gap: 96px;
 }
 
+/* Skip to main content */
+.skip-to-main {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-weight: 600;
+  font-family: var(--font-sans);
+  text-decoration: none;
+  z-index: 9999;
+  transition: top var(--transition);
+}
+.skip-to-main:focus {
+  top: 0;
+  outline: 3px solid var(--color-accent-hover);
+  outline-offset: 2px;
+}
+
 /* Reset & Base */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

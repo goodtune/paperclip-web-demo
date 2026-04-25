@@ -11,6 +11,8 @@
 </head>
 <body>
 
+  <a href="#main-content" class="skip-to-main">Skip to main content</a>
+
   <!-- Navigation -->
   <header class="nav-wrapper" id="nav">
     <nav class="nav container">
@@ -32,7 +34,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main-content">
 
     <!-- Hero -->
     <section class="hero" id="hero">
@@ -470,7 +472,7 @@
             <div class="form-group">
               <label for="budget">Approximate budget</label>
               <select id="budget" name="budget">
-                <option value="">Select a range</option>
+                <option value="" disabled selected>Select a range</option>
                 <option>Under £10k</option>
                 <option>£10k – £25k</option>
                 <option>£25k – £50k</option>
