@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wireframe Viewer — Paperclip Web</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Shell & Tokens ───────────────────────────────────── */
+    :root {
+      --shell-bg: #0d0d14;
+      --shell-surface: #16161f;
+      --shell-border: rgba(255,255,255,0.08);
+      --shell-text: #e8e8f0;
+      --shell-text-muted: #7070a0;
+      --shell-accent: #6366f1;
+      --shell-accent-hover: #818cf8;
+      --sidebar-w: 220px;
+      --topbar-h: 52px;
+      --annot-h: 180px;
+      /* Wireframe palette */
+      --wf-bg: #f2f0ea;
+      --wf-surface: #e8e5dd;
+      --wf-surface-2: #dedad0;
+      --wf-border: #c4c0b4;
+      --wf-text: #2e2c28;
+      --wf-text-muted: #7a7870;
+      --wf-interactive: #3b6fbe;
+      --wf-annotation: #d97b2a;
+      --wf-annotation-bg: #fdf3e8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--shell-bg); color: var(--shell-text); display: flex; flex-direction: column; }
+
+    /* ── Top Bar ──────────────────────────────────────────── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--shell-surface);
+      border-bottom: 1px solid var(--shell-border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+    .topbar__logo {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 600; font-size: 14px;
+      color: var(--shell-text);
+      text-decoration: none;
+    }
+    .topbar__logo svg { flex-shrink: 0; }
+    .topbar__sep { color: var(--shell-text-muted); font-size: 13px; }
+    .topbar__client { font-size: 13px; color: var(--shell-text-muted); }
+    .topbar__project { font-size: 13px; font-weight: 500; }
+    .topbar__badge {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 20px; border: 1px solid rgba(99,102,241,0.4);
+      color: var(--shell-accent); background: rgba(99,102,241,0.1);
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .topbar__spacer { flex: 1; }
+    .topbar__controls { display: flex; align-items: center; gap: 8px; }
+    .viewport-btn {
+      height: 28px; padding: 0 10px; border-radius: 6px;
+      font-size: 12px; font-weight: 500; font-family: inherit;
+      border: 1px solid var(--shell-border);
+      background: transparent; color: var(--shell-text-muted);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .viewport-btn.active { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.5); color: var(--shell-accent); }
+    .viewport-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: var(--shell-text); }
+    .share-btn {
+      height: 28px; padding: 0 12px; border-radius: 6px;
+      font-size: 12px; font-weight: 600; font-family: inherit;
+      border: none; background: var(--shell-accent);
+      color: #fff; cursor: pointer; transition: background 0.15s;
+    }
+    .share-btn:hover { background: var(--shell-accent-hover); }
+    .share-btn.copied { background: #10b981; }
+    .topbar__back {
+      font-size: 12px; color: var(--shell-text-muted); text-decoration: none;
+      padding: 4px 8px; border-radius: 4px;
+      border: 1px solid var(--shell-border);
+      transition: all 0.15s;
+    }
+    .topbar__back:hover { color: var(--shell-text); background: rgba(255,255,255,0.05); }
+
+    /* ── Main Layout ──────────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      grid-template-rows: 1fr var(--annot-h);
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ──────────────────────────────────────────── */
+    .sidebar {
+      background: var(--shell-surface);
+      border-right: 1px solid var(--shell-border);
+      grid-row: 1 / 3;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar__header {
+      padding: 14px 16px 10px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--shell-text-muted);
+    }
+    .frame-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.15s; font-size: 13px;
+    }
+    .frame-item:hover { background: rgba(255,255,255,0.04); }
+    .frame-item.active {
+      background: rgba(99,102,241,0.08);
+      border-left-color: var(--shell-accent);
+      color: var(--shell-accent);
+    }
+    .frame-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--shell-border); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
+      color: var(--shell-text-muted);
+    }
+    .frame-item.active .frame-num {
+      background: var(--shell-accent); color: #fff;
+    }
+    .sidebar__divider { border: none; border-top: 1px solid var(--shell-border); margin: 8px 0; }
+
+    /* ── Canvas ───────────────────────────────────────────── */
+    .canvas-area {
+      overflow-y: auto;
+      background: #2a2935;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .wf-frame-wrap { transition: all 0.25s; }
+    .wf-frame-wrap.desktop { width: 100%; max-width: 1200px; }
+    .wf-frame-wrap.tablet { width: 768px; }
+    .wf-frame-wrap.mobile { width: 390px; }
+
+    /* ── Wireframe Component Styles ───────────────────────── */
+    .wf-frame {
+      background: var(--wf-bg);
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--wf-text);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .wf-annotated { position: relative; }
+    .wf-badge {
+      position: absolute; top: -1px; right: -1px; z-index: 20;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--wf-annotation); color: #fff;
+      font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(217,123,42,0.5);
+      cursor: pointer; transition: transform 0.15s;
+    }
+    .wf-badge:hover, .wf-annotated.highlighted .wf-badge { transform: scale(1.2); }
+    .wf-annotated.highlighted { outline: 2px solid var(--wf-annotation); outline-offset: 2px; }
+
+    /* Wireframe: Navbar */
+    .wf-navbar {
+      display: flex; align-items: center; gap: 0;
+      height: 60px; padding: 0 24px;
+      background: var(--wf-surface); border-bottom: 1.5px solid var(--wf-border);
+    }
+    .wf-nav-logo {
+      font-size: 15px; font-weight: 700; color: var(--wf-text);
+      display: flex; align-items: center; gap: 8px; margin-right: auto;
+    }
+    .wf-nav-logo-mark {
+      width: 28px; height: 28px; background: var(--wf-interactive);
+      border-radius: 6px; flex-shrink: 0;
+    }
+    .wf-nav-links { display: flex; gap: 20px; margin-right: 24px; }
+    .wf-nav-link { font-size: 13px; color: var(--wf-text-muted); }
+    .wf-nav-cta {
+      font-size: 12px; font-weight: 600; color: var(--wf-interactive);
+      padding: 6px 14px; border: 1.5px solid var(--wf-interactive);
+      border-radius: 6px;
+    }
+
+    /* Wireframe: Hero Search */
+    .wf-hero-search {
+      position: relative; min-height: 380px;
+      background: var(--wf-surface-2);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .wf-hero-img {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(45deg, var(--wf-surface-2) 0, var(--wf-surface-2) 10px, var(--wf-surface) 10px, var(--wf-surface) 11px);
+      opacity: 0.6;
+    }
+    .wf-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(20,18,14,0.5), rgba(20,18,14,0.7));
+    }
+    .wf-hero-content {
+      position: relative; z-index: 2;
+      text-align: center; padding: 40px 24px;
+      max-width: 700px;
+    }
+    .wf-hero-tabs {
+      display: inline-flex; gap: 0; margin-bottom: 20px;
+      border-radius: 6px; overflow: hidden; border: 1.5px solid rgba(255,255,255,0.3);
+    }
+    .wf-hero-tab {
+      padding: 6px 20px; font-size: 13px; font-weight: 600;
+      color: rgba(255,255,255,0.7);
+    }
+    .wf-hero-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
+    .wf-hero-heading {
+      font-size: clamp(24px, 3.5vw, 38px); font-weight: 700;
+      color: #fff; margin-bottom: 10px; line-height: 1.2;
+    }
+    .wf-hero-sub { font-size: 15px; color: rgba(255,255,255,0.75); margin-bottom: 28px; }
+    .wf-search-row {
+      display: flex; gap: 0; max-width: 540px; margin: 0 auto;
+      background: #fff; border-radius: 8px; overflow: hidden;
+      border: 1.5px solid var(--wf-border);
+    }
+    .wf-search-input-box {
+      flex: 1; padding: 12px 16px; font-size: 13px;
+      color: var(--wf-text-muted); border: none; background: transparent;
+    }
+    .wf-search-btn {
+      padding: 0 24px; background: var(--wf-interactive);
+      color: #fff; font-size: 13px; font-weight: 600;
+      border: none;
+    }
+
+    /* Wireframe: Stats bar */
+    .wf-stats-bar {
+      display: flex; justify-content: center;
+      background: var(--wf-surface); border-bottom: 1.5px solid var(--wf-border);
+      padding: 16px 24px; gap: 0;
+    }
+    .wf-stat-item {
+      flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+      color: var(--wf-text); padding: 8px 0;
+      border-right: 1.5px solid var(--wf-border);
+    }
+    .wf-stat-item:last-child { border-right: none; }
+
+    /* Wireframe: Section title */
+    .wf-section-title {
+      text-align: center; padding: 40px 24px 24px;
+    }
+    .wf-section-h2 {
+      font-size: clamp(18px, 2.5vw, 26px); font-weight: 700;
+      color: var(--wf-text); margin-bottom: 6px;
+    }
+    .wf-section-sub { font-size: 13px; color: var(--wf-text-muted); }
+
+    /* Wireframe: Card grid */
+    .wf-card-grid { display: grid; gap: 20px; padding: 0 24px 40px; }
+    .wf-card {
+      background: var(--wf-surface); border: 1.5px solid var(--wf-border);
+      border-radius: 8px; overflow: hidden;
+    }
+    .wf-card-img {
+      background: var(--wf-surface-2); position: relative;
+      background-image: repeating-linear-gradient(45deg, transparent 0, transparent 12px, rgba(0,0,0,0.04) 12px, rgba(0,0,0,0.04) 13px);
+    }
+    .wf-card-img-label {
+      position: absolute; inset: 0; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 11px; color: var(--wf-text-muted); letter-spacing: 0.05em;
+    }
+    .wf-save-btn {
+      position: absolute; top: 8px; right: 8px;
+      width: 28px; height: 28px; background: rgba(255,255,255,0.9);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 13px;
+    }
+    .wf-sold-banner {
+      position: absolute; bottom: 8px; left: 8px;
+      background: #b91c1c; color: #fff;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      padding: 3px 8px; border-radius: 3px;
+    }
+    .wf-card-body { padding: 12px 14px 14px; }
+    .wf-card-suburb { font-size: 11px; color: var(--wf-text-muted); margin-bottom: 4px; }
+    .wf-card-price { font-size: 15px; font-weight: 700; color: var(--wf-text); margin-bottom: 8px; }
+    .wf-card-stats { display: flex; gap: 12px; font-size: 11px; color: var(--wf-text-muted); }
+    .wf-card-agent { font-size: 11px; color: var(--wf-text-muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--wf-border); }
+    .wf-sold-date { font-size: 11px; color: var(--wf-text-muted); margin-top: 6px; }
+
+    /* Wireframe: Promo split */
+    .wf-promo-split { padding: 40px 24px; background: var(--wf-surface); border-top: 1.5px solid var(--wf-border); border-bottom: 1.5px solid var(--wf-border); }
+    .wf-promo-heading { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 32px; }
+    .wf-promo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .wf-promo-item { text-align: center; padding: 20px; }
+    .wf-promo-icon { width: 44px; height: 44px; background: var(--wf-surface-2); border: 1.5px solid var(--wf-border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 14px; color: var(--wf-interactive); }
+    .wf-promo-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .wf-promo-body { font-size: 12px; color: var(--wf-text-muted); line-height: 1.5; }
+
+    /* Wireframe: CTA Banner */
+    .wf-cta-banner {
+      background: var(--wf-interactive); padding: 48px 24px;
+      text-align: center; color: #fff;
+    }
+    .wf-cta-heading { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .wf-cta-sub { font-size: 14px; opacity: 0.85; margin-bottom: 20px; }
+    .wf-cta-btn { display: inline-block; padding: 12px 28px; background: #fff; color: var(--wf-interactive); font-size: 13px; font-weight: 700; border-radius: 6px; }
+
+    /* Wireframe: Footer */
+    .wf-footer { background: var(--wf-surface-2); border-top: 1.5px solid var(--wf-border); padding: 40px 24px 24px; }
+    .wf-footer-cols { display: grid; gap: 20px; margin-bottom: 24px; }
+    .wf-footer-col-head { font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--wf-text-muted); }
+    .wf-footer-link { font-size: 12px; color: var(--wf-text-muted); padding: 3px 0; display: block; }
+    .wf-footer-bottom { border-top: 1px solid var(--wf-border); padding-top: 16px; font-size: 11px; color: var(--wf-text-muted); }
+
+    /* Wireframe: Breadcrumb */
+    .wf-breadcrumb { padding: 12px 24px; font-size: 12px; color: var(--wf-text-muted); border-bottom: 1px solid var(--wf-border); background: var(--wf-surface); }
+    .wf-breadcrumb span + span::before { content: ' › '; color: var(--wf-border); }
+
+    /* Wireframe: Listings layout */
+    .wf-listings-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 600px; }
+    .wf-filter-sidebar { background: var(--wf-surface); border-right: 1.5px solid var(--wf-border); padding: 20px; }
+    .wf-filter-group { margin-bottom: 20px; }
+    .wf-filter-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--wf-text-muted); margin-bottom: 10px; }
+    .wf-range-track { height: 4px; background: var(--wf-surface-2); border-radius: 2px; position: relative; margin: 8px 0; }
+    .wf-range-fill { position: absolute; left: 20%; right: 30%; height: 100%; background: var(--wf-interactive); border-radius: 2px; }
+    .wf-range-handle { position: absolute; top: -6px; width: 16px; height: 16px; background: var(--wf-interactive); border: 2px solid #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    .wf-range-hint { font-size: 11px; color: var(--wf-text-muted); margin-top: 6px; }
+    .wf-pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .wf-pill { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1.5px solid var(--wf-border); color: var(--wf-text-muted); }
+    .wf-pill.active { border-color: var(--wf-interactive); color: var(--wf-interactive); background: rgba(59,111,190,0.08); }
+    .wf-check-row { display: flex; flex-direction: column; gap: 8px; }
+    .wf-check-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .wf-checkbox { width: 14px; height: 14px; border: 1.5px solid var(--wf-border); border-radius: 3px; flex-shrink: 0; }
+    .wf-filter-reset { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--wf-border); font-size: 12px; color: var(--wf-interactive); cursor: pointer; }
+    .wf-listings-main { padding: 20px; }
+    .wf-listings-toolbar {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 16px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--wf-border);
+    }
+    .wf-result-count { font-size: 13px; font-weight: 600; margin-right: auto; }
+    .wf-sort-select { font-size: 12px; padding: 6px 10px; border: 1.5px solid var(--wf-border); border-radius: 6px; background: var(--wf-surface); color: var(--wf-text); }
+    .wf-view-toggle { display: flex; border: 1.5px solid var(--wf-border); border-radius: 6px; overflow: hidden; }
+    .wf-view-btn { padding: 6px 10px; font-size: 12px; color: var(--wf-text-muted); }
+    .wf-view-btn.active { background: var(--wf-surface-2); color: var(--wf-text); }
+
+    /* Wireframe: Pagination */
+    .wf-pagination { display: flex; justify-content: center; align-items: center; gap: 4px; padding: 24px; }
+    .wf-page-btn { width: 32px; height: 32px; border-radius: 6px; border: 1.5px solid var(--wf-border); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--wf-text-muted); }
+    .wf-page-btn.active { background: var(--wf-interactive); border-color: var(--wf-interactive); color: #fff; font-weight: 700; }
+    .wf-page-btn.arrow { color: var(--wf-interactive); }
+
+    /* Wireframe: Photo Gallery */
+    .wf-photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: var(--wf-border); position: relative; }
+    .wf-gallery-main { grid-row: 1 / 3; min-height: 300px; }
+    .wf-gallery-thumb { }
+    .wf-gallery-img {
+      width: 100%; height: 100%;
+      background: var(--wf-surface-2);
+      background-image: repeating-linear-gradient(45deg, transparent 0, transparent 14px, rgba(0,0,0,0.04) 14px, rgba(0,0,0,0.04) 15px);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: var(--wf-text-muted); position: relative;
+    }
+    .wf-gallery-count {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(0,0,0,0.6); color: #fff;
+      font-size: 11px; padding: 4px 10px; border-radius: 4px;
+    }
+
+    /* Wireframe: Detail layout */
+    .wf-detail-layout { display: grid; grid-template-columns: 1fr 320px; gap: 0; }
+    .wf-detail-main { padding: 24px; border-right: 1.5px solid var(--wf-border); }
+    .wf-detail-sidebar { padding: 20px; background: var(--wf-surface); }
+    .wf-property-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .wf-property-price { font-size: 22px; font-weight: 700; color: var(--wf-interactive); margin-bottom: 12px; }
+    .wf-property-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .wf-stat-pill { font-size: 12px; padding: 5px 12px; border-radius: 20px; background: var(--wf-surface); border: 1.5px solid var(--wf-border); }
+    .wf-text-block-heading { font-size: 15px; font-weight: 700; margin-bottom: 12px; margin-top: 24px; }
+    .wf-text-line { height: 9px; background: var(--wf-surface-2); border-radius: 2px; margin-bottom: 7px; }
+    .wf-feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0; }
+    .wf-feature-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--wf-text-muted); }
+    .wf-feature-dot { width: 6px; height: 6px; background: var(--wf-interactive); border-radius: 50%; flex-shrink: 0; }
+    .wf-map-block { background: var(--wf-surface-2); border: 1.5px solid var(--wf-border); border-radius: 8px; margin-top: 24px; overflow: hidden; }
+    .wf-map-header { padding: 10px 14px; border-bottom: 1px solid var(--wf-border); background: var(--wf-surface); display: flex; gap: 8px; align-items: center; }
+    .wf-map-toggle { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1.5px solid var(--wf-border); color: var(--wf-text-muted); }
+    .wf-map-toggle.active { border-color: var(--wf-interactive); color: var(--wf-interactive); }
+    .wf-map-canvas {
+      background: repeating-linear-gradient(0deg, transparent 0, transparent 30px, rgba(0,0,0,0.03) 30px, rgba(0,0,0,0.03) 31px), repeating-linear-gradient(90deg, transparent 0, transparent 30px, rgba(0,0,0,0.03) 30px, rgba(0,0,0,0.03) 31px), var(--wf-surface-2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: var(--wf-text-muted);
+    }
+    .wf-map-pin { width: 20px; height: 20px; background: var(--wf-interactive); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); }
+
+    /* Wireframe: Enquiry form */
+    .wf-form { }
+    .wf-form-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+    .wf-form-field { margin-bottom: 10px; }
+    .wf-form-label { font-size: 11px; font-weight: 600; color: var(--wf-text-muted); margin-bottom: 4px; display: block; }
+    .wf-form-input { width: 100%; height: 34px; background: var(--wf-bg); border: 1.5px solid var(--wf-border); border-radius: 5px; }
+    .wf-form-textarea { width: 100%; height: 70px; background: var(--wf-bg); border: 1.5px solid var(--wf-border); border-radius: 5px; }
+    .wf-form-btn { display: block; width: 100%; padding: 10px; background: var(--wf-interactive); color: #fff; font-size: 13px; font-weight: 700; border-radius: 6px; text-align: center; margin-top: 14px; border: none; }
+
+    /* Wireframe: Agent card */
+    .wf-agent-card { border: 1.5px solid var(--wf-border); border-radius: 8px; padding: 16px; margin-top: 16px; background: var(--wf-bg); }
+    .wf-agent-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .wf-agent-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--wf-surface-2); border: 1.5px solid var(--wf-border); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--wf-text-muted); flex-shrink: 0; }
+    .wf-agent-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .wf-agent-meta { font-size: 11px; color: var(--wf-text-muted); }
+    .wf-agent-actions { display: flex; gap: 8px; }
+    .wf-agent-btn { flex: 1; padding: 8px; border: 1.5px solid var(--wf-interactive); border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--wf-interactive); text-align: center; }
+    .wf-agent-profile-link { font-size: 12px; color: var(--wf-interactive); text-align: center; display: block; margin-top: 10px; }
+
+    /* Wireframe: Agent hero */
+    .wf-agent-hero { background: var(--wf-surface); border-bottom: 1.5px solid var(--wf-border); padding: 32px 24px; display: flex; gap: 32px; align-items: center; }
+    .wf-agent-photo { width: 160px; height: 160px; background: var(--wf-surface-2); border: 1.5px solid var(--wf-border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; color: var(--wf-text-muted); flex-shrink: 0; }
+    .wf-agent-hero-name { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .wf-agent-hero-title { font-size: 14px; color: var(--wf-text-muted); margin-bottom: 12px; }
+    .wf-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .wf-tag { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: var(--wf-surface-2); border: 1.5px solid var(--wf-border); color: var(--wf-text-muted); }
+    .wf-agent-hero-actions { display: flex; gap: 10px; }
+    .wf-hero-btn-primary { padding: 10px 20px; background: var(--wf-interactive); color: #fff; font-size: 13px; font-weight: 600; border-radius: 6px; }
+    .wf-hero-btn-outline { padding: 10px 20px; border: 1.5px solid var(--wf-interactive); color: var(--wf-interactive); font-size: 13px; font-weight: 600; border-radius: 6px; }
+
+    /* Wireframe: Testimonials */
+    .wf-testimonials { padding: 40px 24px; background: var(--wf-surface); border-top: 1.5px solid var(--wf-border); }
+    .wf-testimonials-heading { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 24px; }
+    .wf-testimonials-grid { display: grid; gap: 16px; }
+    .wf-testimonial-card { background: var(--wf-bg); border: 1.5px solid var(--wf-border); border-radius: 8px; padding: 20px; }
+    .wf-stars { color: var(--wf-annotation); font-size: 14px; margin-bottom: 10px; }
+    .wf-testimonial-quote { font-size: 13px; color: var(--wf-text); line-height: 1.6; margin-bottom: 14px; }
+    .wf-testimonial-author { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+    .wf-testimonial-prop { font-size: 11px; color: var(--wf-text-muted); }
+    .wf-reviews-link { text-align: center; margin-top: 16px; font-size: 13px; color: var(--wf-interactive); }
+
+    /* Wireframe: Contact form section */
+    .wf-contact-section { padding: 40px 24px; }
+    .wf-contact-heading { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+    .wf-contact-form { max-width: 560px; }
+    .wf-contact-field { margin-bottom: 12px; }
+    .wf-contact-label { font-size: 12px; font-weight: 600; color: var(--wf-text-muted); margin-bottom: 4px; display: block; }
+    .wf-contact-input { width: 100%; height: 38px; background: var(--wf-surface); border: 1.5px solid var(--wf-border); border-radius: 6px; }
+    .wf-contact-select { width: 100%; height: 38px; background: var(--wf-surface); border: 1.5px solid var(--wf-border); border-radius: 6px; }
+    .wf-contact-textarea { width: 100%; height: 90px; background: var(--wf-surface); border: 1.5px solid var(--wf-border); border-radius: 6px; }
+    .wf-contact-btn { margin-top: 8px; padding: 12px 32px; background: var(--wf-interactive); color: #fff; font-size: 13px; font-weight: 700; border-radius: 6px; display: inline-block; }
+
+    /* ── Annotation Panel ─────────────────────────────────── */
+    .annotation-panel {
+      grid-column: 2;
+      background: var(--shell-surface);
+      border-top: 1px solid var(--shell-border);
+      overflow-y: auto;
+      padding: 0;
+    }
+    .annotation-panel__header {
+      padding: 10px 16px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--shell-text-muted);
+      border-bottom: 1px solid var(--shell-border);
+      position: sticky; top: 0; background: var(--shell-surface); z-index: 1;
+    }
+    .annotation-list { display: flex; flex-direction: column; }
+    .annotation-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 16px; cursor: pointer; transition: background 0.15s;
+      border-bottom: 1px solid var(--shell-border);
+    }
+    .annotation-item:hover { background: rgba(255,255,255,0.03); }
+    .annotation-item.active { background: rgba(217,123,42,0.08); }
+    .annotation-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--wf-annotation); color: #fff;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .annotation-text { font-size: 12px; color: var(--shell-text-muted); line-height: 1.5; padding-top: 1px; }
+
+    /* ── Mobile Fallback ──────────────────────────────────── */
+    @media (max-width: 680px) {
+      :root { --sidebar-w: 0px; --annot-h: 140px; }
+      .sidebar { display: none; }
+      .layout { grid-template-columns: 1fr; }
+      .annotation-panel { grid-column: 1; }
+      .canvas-area { padding: 16px; }
+      .topbar__client { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar" role="banner">
+    <a href="index.html" class="topbar__logo" aria-label="Paperclip Web wireframes home">
+      <svg width="20" height="20" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2zm0 4a8 8 0 110 16A8 8 0 0114 6zm0 3a5 5 0 100 10A5 5 0 0014 9zm0 2a3 3 0 110 6 3 3 0 010-6z" fill="#6366f1"/>
+      </svg>
+      Paperclip Web
+    </a>
+    <span class="topbar__sep" aria-hidden="true">/</span>
+    <span class="topbar__client" id="clientName"></span>
+    <span class="topbar__sep" aria-hidden="true">/</span>
+    <span class="topbar__project" id="projectName"></span>
+    <span class="topbar__badge" id="projectStatus"></span>
+    <div class="topbar__spacer"></div>
+    <div class="topbar__controls" role="group" aria-label="Viewport size">
+      <button class="viewport-btn active" data-vp="desktop" title="Desktop view">Desktop</button>
+      <button class="viewport-btn" data-vp="tablet" title="Tablet view">Tablet</button>
+      <button class="viewport-btn" data-vp="mobile" title="Mobile view">Mobile</button>
+    </div>
+    <button class="share-btn" id="shareBtn" aria-live="polite">Copy link</button>
+    <a href="../index.html" class="topbar__back">← Main site</a>
+  </header>
+
+  <div class="layout" role="main">
+
+    <!-- Frame Sidebar -->
+    <nav class="sidebar" aria-label="Wireframe frames">
+      <div class="sidebar__header">Frames</div>
+      <div id="frameList"></div>
+    </nav>
+
+    <!-- Canvas -->
+    <div class="canvas-area" id="canvasArea" tabindex="0" aria-label="Wireframe canvas">
+      <div id="frameWrap" class="wf-frame-wrap desktop">
+        <div id="wfFrame" class="wf-frame" aria-label="Wireframe preview"></div>
+      </div>
+    </div>
+
+    <!-- Annotation Panel -->
+    <aside class="annotation-panel" aria-label="Frame annotations">
+      <div class="annotation-panel__header">Annotations</div>
+      <div class="annotation-list" id="annotationList"></div>
+    </aside>
+
+  </div>
+
+  <!-- Load project data -->
+  <script src="northstar-homes.js"></script>
+  <script>
+    /* ── Renderer Functions ─────────────────────────────────── */
+
+    function imgBlock(height, label) {
+      return `<div style="height:${height}px;position:relative;" class="wf-card-img">
+        <div class="wf-card-img-label">${label || 'IMAGE'}</div>
+      </div>`;
+    }
+
+    function textLines(count, widths) {
+      const w = widths || [100,90,100,85,100,70,60];
+      return Array.from({length: count}, (_, i) =>
+        `<div class="wf-text-line" style="width:${w[i % w.length]}%"></div>`
+      ).join('');
+    }
+
+    const renderers = {
+
+      navbar({props}) {
+        return `<nav class="wf-navbar" role="navigation">
+          <div class="wf-nav-logo"><div class="wf-nav-logo-mark" aria-hidden="true"></div>${props.logo}</div>
+          <div class="wf-nav-links" aria-hidden="true">${props.links.map(l => `<span class="wf-nav-link">${l}</span>`).join('')}</div>
+          <span class="wf-nav-cta" aria-hidden="true">${props.cta}</span>
+        </nav>`;
+      },
+
+      'hero-search'({props}) {
+        const tabs = (props.tabs || []).map((t, i) =>
+          `<span class="wf-hero-tab${i===0?' active':''}">${t}</span>`).join('');
+        return `<div class="wf-hero-search" aria-label="Hero section">
+          <div class="wf-hero-img" aria-hidden="true"></div>
+          <div class="wf-hero-overlay" aria-hidden="true"></div>
+          <div class="wf-hero-content">
+            ${tabs ? `<div class="wf-hero-tabs" aria-hidden="true">${tabs}</div>` : ''}
+            <div class="wf-hero-heading">${props.heading}</div>
+            <div class="wf-hero-sub">${props.sub}</div>
+            <div class="wf-search-row" aria-hidden="true">
+              <div class="wf-search-input-box">Suburb, postcode or address…</div>
+              <div class="wf-search-btn">Search</div>
+            </div>
+          </div>
+        </div>`;
+      },
+
+      'stats-bar'({props}) {
+        return `<div class="wf-stats-bar" aria-hidden="true">
+          ${props.stats.map(s => `<div class="wf-stat-item">${s}</div>`).join('')}
+        </div>`;
+      },
+
+      'section-title'({props}) {
+        return `<div class="wf-section-title">
+          <div class="wf-section-h2">${props.title}</div>
+          ${props.sub ? `<div class="wf-section-sub">${props.sub}</div>` : ''}
+        </div>`;
+      },
+
+      'card-grid'({props}) {
+        const cards = Array.from({length: props.count}, (_, i) => {
+          if (props.variant === 'sold') {
+            return `<div class="wf-card">
+              <div class="wf-card-img" style="height:150px">
+                <div class="wf-card-img-label">PHOTO</div>
+                <div class="wf-sold-banner">SOLD</div>
+              </div>
+              <div class="wf-card-body">
+                <div class="wf-card-suburb">Suburb, NSW</div>
+                <div class="wf-card-price">$${(900 + i*85)}k</div>
+                <div class="wf-sold-date">Sold Apr 2026</div>
+              </div>
+            </div>`;
+          }
+          return `<div class="wf-card">
+            <div class="wf-card-img" style="height:190px">
+              <div class="wf-card-img-label">PHOTO</div>
+              <div class="wf-save-btn" aria-hidden="true">♡</div>
+            </div>
+            <div class="wf-card-body">
+              <div class="wf-card-suburb">Suburb, NSW ${2000+i}</div>
+              <div class="wf-card-price">$${(850 + i*120).toLocaleString()}k</div>
+              <div class="wf-card-stats"><span>🛏 3</span><span>🚿 2</span><span>🚗 1</span></div>
+              <div class="wf-card-agent">Listed by Sarah Mitchell</div>
+            </div>
+          </div>`;
+        });
+        return `<div class="wf-card-grid" style="grid-template-columns:repeat(${props.cols},1fr)">
+          ${cards.join('')}
+        </div>`;
+      },
+
+      'promo-split'({props}) {
+        return `<div class="wf-promo-split" aria-hidden="true">
+          <div class="wf-promo-heading">${props.heading}</div>
+          <div class="wf-promo-grid">
+            ${props.items.map(item => `
+              <div class="wf-promo-item">
+                <div class="wf-promo-icon">${item.icon}</div>
+                <div class="wf-promo-title">${item.title}</div>
+                <div class="wf-promo-body">${item.body}</div>
+              </div>`).join('')}
+          </div>
+        </div>`;
+      },
+
+      'cta-banner'({props}) {
+        return `<div class="wf-cta-banner" aria-hidden="true">
+          <div class="wf-cta-heading">${props.heading}</div>
+          <div class="wf-cta-sub">${props.sub}</div>
+          <span class="wf-cta-btn">${props.cta}</span>
+        </div>`;
+      },
+
+      footer({props}) {
+        const links = ['Link one', 'Link two', 'Link three', 'Link four'];
+        return `<footer class="wf-footer" aria-hidden="true">
+          <div class="wf-footer-cols" style="grid-template-columns:repeat(${props.cols.length},1fr)">
+            ${props.cols.map(c => `
+              <div class="wf-footer-col">
+                <div class="wf-footer-col-head">${c}</div>
+                ${links.map(l => `<div class="wf-footer-link">${l}</div>`).join('')}
+              </div>`).join('')}
+          </div>
+          <div class="wf-footer-bottom">© 2026 NorthStar Homes — Privacy Policy · Terms of Use</div>
+        </footer>`;
+      },
+
+      breadcrumb({props}) {
+        return `<div class="wf-breadcrumb" aria-label="Breadcrumb">
+          ${props.crumbs.map(c => `<span>${c}</span>`).join('')}
+        </div>`;
+      },
+
+      'listings-layout'({props}) {
+        const filters = props.filters.map(f => {
+          let input = '';
+          if (f.type === 'range') {
+            input = `<div class="wf-range-track">
+              <div class="wf-range-fill"></div>
+              <div class="wf-range-handle" style="left:18%"></div>
+              <div class="wf-range-handle" style="left:68%"></div>
+            </div>
+            <div class="wf-range-hint">${f.hint || ''}</div>`;
+          } else if (f.type === 'pills') {
+            input = `<div class="wf-pill-row">
+              ${f.opts.map((o,i) => `<span class="wf-pill${i===0?' active':''}">${o}</span>`).join('')}
+            </div>`;
+          } else if (f.type === 'checks') {
+            input = `<div class="wf-check-row">
+              ${f.opts.map(o => `<label class="wf-check-item"><div class="wf-checkbox"></div>${o}</label>`).join('')}
+            </div>`;
+          }
+          return `<div class="wf-filter-group"><div class="wf-filter-label">${f.label}</div>${input}</div>`;
+        }).join('');
+
+        const cards = Array.from({length: props.cardCount}, (_, i) =>
+          `<div class="wf-card">
+            <div class="wf-card-img" style="height:170px">
+              <div class="wf-card-img-label">PHOTO</div>
+              <div class="wf-save-btn" aria-hidden="true">♡</div>
+            </div>
+            <div class="wf-card-body">
+              <div class="wf-card-suburb">Suburb, NSW ${2000+i}</div>
+              <div class="wf-card-price">$${(750+i*95).toLocaleString()}k</div>
+              <div class="wf-card-stats"><span>🛏 ${3+i%2}</span><span>🚿 2</span><span>🚗 1</span></div>
+              <div class="wf-card-agent">Listed by agent name</div>
+            </div>
+          </div>`).join('');
+
+        return `<div class="wf-listings-layout">
+          <aside class="wf-filter-sidebar" aria-label="Filters">
+            ${filters}
+            <div class="wf-filter-reset">✕ Clear all filters</div>
+          </aside>
+          <div class="wf-listings-main">
+            <div class="wf-listings-toolbar">
+              <div class="wf-result-count">${props.resultCount}</div>
+              <select class="wf-sort-select" aria-label="Sort by">
+                ${props.sortOpts.map(o => `<option>${o}</option>`).join('')}
+              </select>
+              <div class="wf-view-toggle" aria-label="View as">
+                <button class="wf-view-btn active">☰ List</button>
+                <button class="wf-view-btn">⊞ Map</button>
+              </div>
+            </div>
+            <div class="wf-card-grid" style="grid-template-columns:repeat(3,1fr)">${cards}</div>
+          </div>
+        </div>`;
+      },
+
+      pagination({props}) {
+        const pages = [1,2,3,'…',props.total-1,props.total];
+        return `<div class="wf-pagination" aria-label="Pagination">
+          <div class="wf-page-btn arrow" aria-label="Previous">‹</div>
+          ${pages.map(p => `<div class="wf-page-btn${p===props.current?' active':''}">${p}</div>`).join('')}
+          <div class="wf-page-btn arrow" aria-label="Next">›</div>
+        </div>`;
+      },
+
+      'photo-gallery'({props}) {
+        const thumbHeight = Math.round(props.mainHeight / 2) - 2;
+        const thumbs = Array.from({length: props.thumbCount-1}, (_, i) =>
+          `<div class="wf-gallery-thumb">
+            <div class="wf-gallery-img" style="height:${thumbHeight}px">PHOTO ${i+2}</div>
+          </div>`).join('');
+        return `<div class="wf-photo-gallery" aria-label="Property photos">
+          <div class="wf-gallery-main">
+            <div class="wf-gallery-img" style="height:${props.mainHeight}px">
+              MAIN PHOTO
+              <div class="wf-gallery-count">+12 photos</div>
+            </div>
+          </div>
+          ${thumbs}
+        </div>`;
+      },
+
+      'detail-layout'({props}) {
+        const mainHtml = props.main.map(c => renderComponent(c)).join('');
+        const sidebarHtml = props.sidebar.map(c => renderComponent(c)).join('');
+        return `<div class="wf-detail-layout">
+          <div class="wf-detail-main">${mainHtml}</div>
+          <div class="wf-detail-sidebar">${sidebarHtml}</div>
+        </div>`;
+      },
+
+      'property-title'({props}) {
+        return `<div>
+          <div class="wf-property-title">${props.address}</div>
+          <div class="wf-property-price">${props.price}</div>
+          <div class="wf-property-stats">${props.stats.map(s => `<span class="wf-stat-pill">${s}</span>`).join('')}</div>
+        </div>`;
+      },
+
+      'text-section'({props}) {
+        return `<div>
+          <div class="wf-text-block-heading">${props.heading}</div>
+          ${textLines(props.lines || 5, [100,92,100,87,100,75,50])}
+        </div>`;
+      },
+
+      'feature-list'({props}) {
+        const features = ['Ducted air conditioning','Timber floors throughout','Open plan living','Entertainer\'s deck','Gas cooktop & oven','Dishwasher','Internal laundry','Lock-up garage','Garden shed','Rainwater tank'];
+        return `<div>
+          <div class="wf-text-block-heading">${props.heading}</div>
+          <div class="wf-feature-grid">
+            ${features.slice(0, props.count || 8).map(f => `
+              <div class="wf-feature-item">
+                <div class="wf-feature-dot" aria-hidden="true"></div>${f}
+              </div>`).join('')}
+          </div>
+        </div>`;
+      },
+
+      'map-block'({props}) {
+        return `<div class="wf-map-block">
+          <div class="wf-map-header">
+            <span style="font-size:11px;font-weight:600;color:var(--wf-text-muted);margin-right:8px">Nearby:</span>
+            ${(props.toggles || ['Schools','Transport','Shops']).map((t,i) =>
+              `<span class="wf-map-toggle${i===0?' active':''}">${t}</span>`).join('')}
+          </div>
+          <div class="wf-map-canvas" style="height:${props.height || 260}px" aria-label="Location map placeholder">
+            <div style="text-align:center">
+              <div class="wf-map-pin" style="margin:0 auto 8px"></div>
+              <div style="font-size:11px">12 Cooper Street, Surry Hills</div>
+            </div>
+          </div>
+        </div>`;
+      },
+
+      'enquiry-form'({props}) {
+        return `<div>
+          <div class="wf-form-title">Enquire about this property</div>
+          ${props.fields.map(f => `
+            <div class="wf-form-field">
+              <div class="wf-form-label">${f}</div>
+              ${f.toLowerCase().includes('message')
+                ? `<div class="wf-form-textarea"></div>`
+                : `<div class="wf-form-input"></div>`}
+            </div>`).join('')}
+          <div class="wf-form-btn" aria-hidden="true">${props.cta}</div>
+        </div>`;
+      },
+
+      'agent-card'({props}) {
+        return `<div class="wf-agent-card">
+          <div class="wf-agent-header">
+            <div class="wf-agent-avatar" aria-hidden="true">${props.initials || 'SM'}</div>
+            <div>
+              <div class="wf-agent-name">${props.name}</div>
+              <div class="wf-agent-meta">${props.title || ''}</div>
+              <div class="wf-agent-meta">${props.agency}</div>
+            </div>
+          </div>
+          <div class="wf-agent-actions">
+            <div class="wf-agent-btn">📞 Call</div>
+            <div class="wf-agent-btn">✉ Email</div>
+          </div>
+          <a class="wf-agent-profile-link" href="#">View agent profile →</a>
+        </div>`;
+      },
+
+      'agent-hero'({props}) {
+        return `<div class="wf-agent-hero" aria-label="Agent profile header">
+          <div class="wf-agent-photo" aria-hidden="true">${props.initials}</div>
+          <div>
+            <div class="wf-agent-hero-name">${props.name}</div>
+            <div class="wf-agent-hero-title">${props.title} · ${props.agency}</div>
+            <div class="wf-tag-row" aria-hidden="true">
+              ${(props.tags || []).map(t => `<span class="wf-tag">${t}</span>`).join('')}
+            </div>
+            <div class="wf-agent-hero-actions" aria-hidden="true">
+              <span class="wf-hero-btn-primary">📞 Call Sarah</span>
+              <span class="wf-hero-btn-outline">✉ Send email</span>
+            </div>
+          </div>
+        </div>`;
+      },
+
+      testimonials({props}) {
+        const quotes = [
+          { quote: "Sarah was outstanding from start to finish. She had our property under offer in just 11 days and achieved well above our reserve.", name: "Michael & Jen T.", property: "Sold — Leichhardt NSW" },
+          { quote: "Professional, responsive, and incredibly knowledgeable about the Inner West market. I would not hesitate to recommend Sarah to anyone.", name: "Daniel K.", property: "Sold — Balmain NSW" },
+          { quote: "We felt supported throughout the entire process. Sarah's communication was excellent and she delivered an outstanding result.", name: "Priya & Rahul M.", property: "Sold — Surry Hills NSW" },
+        ];
+        return `<div class="wf-testimonials">
+          <div class="wf-testimonials-heading">Client Reviews</div>
+          <div class="wf-testimonials-grid" style="grid-template-columns:repeat(${Math.min(props.count,3)},1fr)">
+            ${quotes.slice(0, props.count).map(q => `
+              <div class="wf-testimonial-card">
+                <div class="wf-stars">★★★★★</div>
+                <div class="wf-testimonial-quote">"${q.quote}"</div>
+                <div class="wf-testimonial-author">${q.name}</div>
+                <div class="wf-testimonial-prop">${q.property}</div>
+              </div>`).join('')}
+          </div>
+          <div class="wf-reviews-link">Read all 83 reviews →</div>
+        </div>`;
+      },
+
+      'contact-form'({props}) {
+        return `<div class="wf-contact-section">
+          <div class="wf-contact-heading">${props.heading}</div>
+          <div class="wf-contact-form">
+            ${props.fields.map(f => `
+              <div class="wf-contact-field">
+                <div class="wf-contact-label">${f}</div>
+                ${f.toLowerCase().includes('looking')
+                  ? `<div class="wf-contact-select" aria-hidden="true" style="display:flex;align-items:center;padding:0 10px;font-size:12px;color:var(--wf-text-muted)">Buy / Sell / Appraisal / Other ▾</div>`
+                  : f.toLowerCase().includes('message')
+                    ? `<div class="wf-contact-textarea"></div>`
+                    : `<div class="wf-contact-input"></div>`}
+              </div>`).join('')}
+            <div class="wf-contact-btn" aria-hidden="true">${props.cta}</div>
+          </div>
+        </div>`;
+      }
+    };
+
+    /* ── Core Render Logic ──────────────────────────────────── */
+
+    function renderComponent(comp) {
+      const type = comp.type;
+      const renderer = renderers[type];
+      if (!renderer) return `<div style="padding:12px;background:#fee;font-size:11px;color:#900">Unknown component: ${type}</div>`;
+
+      const inner = renderer(comp);
+      if (!comp.annotation) return inner;
+
+      return `<div class="wf-annotated" data-annotation="${comp.annotation}" style="position:relative">
+        ${inner}
+        <button class="wf-badge" aria-label="Annotation ${comp.annotation}" onclick="activateAnnotation(${comp.annotation})">${comp.annotation}</button>
+      </div>`;
+    }
+
+    function renderFrame(frame) {
+      return frame.components.map(c => renderComponent(c)).join('');
+    }
+
+    /* ── State & Navigation ─────────────────────────────────── */
+
+    const project = window.WF_PROJECT;
+    let currentFrameIdx = 0;
+    let currentVp = 'desktop';
+    let activeAnnotation = null;
+
+    function getFrameIdxFromUrl() {
+      const params = new URLSearchParams(location.search);
+      const fid = params.get('frame');
+      if (!fid) return 0;
+      const idx = project.frames.findIndex(f => f.id === fid);
+      return idx >= 0 ? idx : 0;
+    }
+
+    function setFrame(idx) {
+      currentFrameIdx = idx;
+      activeAnnotation = null;
+
+      // Update URL without pushing history
+      const params = new URLSearchParams(location.search);
+      params.set('frame', project.frames[idx].id);
+      history.replaceState(null, '', `?${params}`);
+
+      renderCurrentFrame();
+      renderAnnotations();
+      updateSidebarActive();
+    }
+
+    function renderCurrentFrame() {
+      const frame = project.frames[currentFrameIdx];
+      document.getElementById('wfFrame').innerHTML = renderFrame(frame);
+    }
+
+    function renderAnnotations() {
+      const frame = project.frames[currentFrameIdx];
+      const list = document.getElementById('annotationList');
+      if (!frame.annotations || !frame.annotations.length) {
+        list.innerHTML = '<div style="padding:12px 16px;font-size:12px;color:var(--shell-text-muted)">No annotations for this frame.</div>';
+        return;
+      }
+      list.innerHTML = frame.annotations.map(a => `
+        <div class="annotation-item" data-id="${a.id}" onclick="activateAnnotation(${a.id})">
+          <div class="annotation-num">${a.id}</div>
+          <div class="annotation-text">${a.text}</div>
+        </div>`).join('');
+    }
+
+    function updateSidebarActive() {
+      document.querySelectorAll('.frame-item').forEach((el, i) => {
+        el.classList.toggle('active', i === currentFrameIdx);
+      });
+    }
+
+    function activateAnnotation(id) {
+      activeAnnotation = id;
+
+      // Update annotation panel
+      document.querySelectorAll('.annotation-item').forEach(el => {
+        el.classList.toggle('active', Number(el.dataset.id) === id);
+      });
+      const activeEl = document.querySelector(`.annotation-item[data-id="${id}"]`);
+      if (activeEl) activeEl.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+
+      // Highlight component in canvas
+      document.querySelectorAll('.wf-annotated').forEach(el => {
+        el.classList.toggle('highlighted', Number(el.dataset.annotation) === id);
+      });
+      const highlighted = document.querySelector(`.wf-annotated[data-annotation="${id}"]`);
+      if (highlighted) highlighted.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    }
+
+    function setViewport(vp) {
+      currentVp = vp;
+      const wrap = document.getElementById('frameWrap');
+      wrap.className = `wf-frame-wrap ${vp}`;
+      document.querySelectorAll('.viewport-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.vp === vp);
+      });
+    }
+
+    /* ── Boot ───────────────────────────────────────────────── */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set project metadata
+      document.getElementById('clientName').textContent = project.client;
+      document.getElementById('projectName').textContent = project.project;
+      document.getElementById('projectStatus').textContent = project.status;
+      document.title = `${project.client} — ${project.project} — Paperclip Web`;
+
+      // Build frame list
+      const frameList = document.getElementById('frameList');
+      frameList.innerHTML = project.frames.map((f, i) => `
+        <div class="frame-item${i===0?' active':''}" onclick="setFrame(${i})" role="button" tabindex="0" aria-label="Frame ${i+1}: ${f.title}">
+          <span class="frame-num">${i+1}</span>${f.title}
+        </div>`).join('') +
+        `<hr class="sidebar__divider">
+        <div style="padding:10px 16px;font-size:11px;color:var(--shell-text-muted);line-height:1.5">
+          <strong style="color:var(--shell-text)">Prepared by</strong><br>Paperclip Web<br><br>
+          <strong style="color:var(--shell-text)">Date</strong><br>${project.date}
+        </div>`;
+
+      // Keyboard nav for frame items
+      frameList.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') e.target.click();
+      });
+
+      // Viewport buttons
+      document.querySelectorAll('.viewport-btn').forEach(btn => {
+        btn.addEventListener('click', () => setViewport(btn.dataset.vp));
+      });
+
+      // Share button
+      const shareBtn = document.getElementById('shareBtn');
+      shareBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(location.href).then(() => {
+          shareBtn.textContent = '✓ Copied!';
+          shareBtn.classList.add('copied');
+          setTimeout(() => {
+            shareBtn.textContent = 'Copy link';
+            shareBtn.classList.remove('copied');
+          }, 2000);
+        });
+      });
+
+      // Init with URL-specified frame
+      currentFrameIdx = getFrameIdxFromUrl();
+      renderCurrentFrame();
+      renderAnnotations();
+      updateSidebarActive();
+    });
+  </script>
+</body>
+</html>

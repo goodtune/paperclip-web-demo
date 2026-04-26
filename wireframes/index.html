@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Wireframes — Paperclip Web</title>
+  <meta name="description" content="Wireframe prototypes prepared by Paperclip Web for client review." />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    .wf-gallery-page { min-height: 100vh; background: var(--color-bg); }
+
+    /* Hero */
+    .wf-hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .wf-hero__bg {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .wf-hero__orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.15;
+    }
+    .wf-hero__orb--1 { width: 400px; height: 400px; background: #6366f1; top: -100px; left: 10%; }
+    .wf-hero__orb--2 { width: 300px; height: 300px; background: #818cf8; bottom: -80px; right: 15%; }
+    .wf-hero__eyebrow {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--color-accent); margin-bottom: 16px;
+    }
+    .wf-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900; line-height: 1.1;
+      color: var(--color-text); margin-bottom: 16px;
+    }
+    .wf-hero__sub {
+      font-size: 17px; color: var(--color-text-muted);
+      max-width: 540px; margin: 0 auto 40px; line-height: 1.6;
+    }
+    .wf-hero__back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--color-text-muted);
+      border: 1px solid var(--color-border); border-radius: 8px;
+      padding: 8px 16px; transition: all 0.2s;
+      text-decoration: none;
+    }
+    .wf-hero__back:hover { color: var(--color-text); background: rgba(255,255,255,0.05); }
+
+    /* Project grid */
+    .wf-projects { padding: 0 0 80px; }
+    .wf-projects__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    /* Project card */
+    .wf-project-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .wf-project-card:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-2px); }
+
+    .wf-project-preview {
+      height: 200px; background: var(--color-surface-2);
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .wf-project-preview__inner {
+      position: absolute; inset: 0; padding: 16px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    /* Mini wireframe preview elements */
+    .mini-nav { height: 28px; background: rgba(255,255,255,0.06); border-radius: 4px; display: flex; align-items: center; padding: 0 10px; gap: 8px; }
+    .mini-nav-logo { width: 60px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+    .mini-nav-links { display: flex; gap: 6px; margin-left: auto; }
+    .mini-nav-link { width: 28px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+    .mini-hero { height: 72px; background: rgba(99,102,241,0.12); border-radius: 4px; border: 1px solid rgba(99,102,241,0.2); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; }
+    .mini-hero-text { width: 120px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+    .mini-hero-search { width: 160px; height: 16px; background: rgba(255,255,255,0.08); border-radius: 3px; border: 1px solid rgba(255,255,255,0.1); }
+    .mini-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .mini-card { height: 44px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 3px; }
+    .mini-frames-label {
+      position: absolute; bottom: 12px; right: 12px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      background: rgba(0,0,0,0.4); padding: 3px 8px; border-radius: 20px;
+    }
+
+    .wf-project-body { padding: 20px 22px; flex: 1; display: flex; flex-direction: column; }
+    .wf-project-client { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-accent); margin-bottom: 4px; }
+    .wf-project-title { font-size: 18px; font-weight: 700; color: var(--color-text); margin-bottom: 6px; }
+    .wf-project-desc { font-size: 13px; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 16px; flex: 1; }
+    .wf-project-meta { display: flex; gap: 12px; font-size: 11px; color: var(--color-text-subtle); margin-bottom: 16px; }
+    .wf-project-frames { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .wf-frame-tag {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      border: 1px solid var(--color-border); color: var(--color-text-muted);
+    }
+    .wf-project-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--color-accent); color: #fff;
+      font-size: 13px; font-weight: 600; padding: 10px 20px;
+      border-radius: 8px; text-decoration: none; transition: background 0.2s;
+      align-self: flex-start;
+    }
+    .wf-project-cta:hover { background: var(--color-accent-hover); }
+
+    /* How it works */
+    .wf-how { padding: 60px 0; border-top: 1px solid var(--color-border); }
+    .wf-how__title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .wf-how__sub { font-size: 14px; color: var(--color-text-muted); margin-bottom: 32px; }
+    .wf-how__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+    .wf-how__item { }
+    .wf-how__num { font-size: 28px; font-weight: 900; color: var(--color-accent); opacity: 0.4; margin-bottom: 8px; font-family: var(--font-display); }
+    .wf-how__item-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .wf-how__item-body { font-size: 13px; color: var(--color-text-muted); line-height: 1.5; }
+
+    /* Empty state */
+    .wf-empty { text-align: center; padding: 60px 24px; border: 2px dashed var(--color-border); border-radius: var(--radius-lg); color: var(--color-text-muted); font-size: 14px; grid-column: 1/-1; }
+
+    @media (max-width: 600px) {
+      .wf-hero { padding: 48px 0 40px; }
+      .wf-projects__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="wf-gallery-page">
+
+  <a href="#main-content" class="skip-to-main">Skip to main content</a>
+
+  <!-- Navigation -->
+  <header class="nav-wrapper" id="nav">
+    <nav class="nav container">
+      <a href="../index.html" class="nav__logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2zm0 4a8 8 0 110 16A8 8 0 0114 6zm0 3a5 5 0 100 10A5 5 0 0014 9zm0 2a3 3 0 110 6 3 3 0 010-6z" fill="currentColor"/>
+        </svg>
+        Paperclip Web
+      </a>
+      <ul class="nav__links" style="display:flex">
+        <li><a href="../index.html#capabilities" class="nav__link">Capabilities</a></li>
+        <li><a href="../index.html#work" class="nav__link">Work</a></li>
+        <li><a href="../index.html#contact" class="nav__cta">Start a Project</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <!-- Hero -->
+    <section class="wf-hero">
+      <div class="wf-hero__bg" aria-hidden="true">
+        <div class="wf-hero__orb wf-hero__orb--1"></div>
+        <div class="wf-hero__orb wf-hero__orb--2"></div>
+      </div>
+      <div class="container">
+        <div class="wf-hero__eyebrow">Client Wireframes</div>
+        <h1 class="wf-hero__title">See the structure<br>before the pixels</h1>
+        <p class="wf-hero__sub">
+          We share interactive wireframes early in every project so you can review layout, flow, and content hierarchy — before a single line of real code is written.
+        </p>
+        <a href="../index.html" class="wf-hero__back">← Back to Paperclip Web</a>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="wf-projects container">
+      <div class="wf-projects__grid">
+
+        <!-- NorthStar Homes -->
+        <article class="wf-project-card">
+          <div class="wf-project-preview" aria-hidden="true">
+            <div class="wf-project-preview__inner">
+              <div class="mini-nav">
+                <div class="mini-nav-logo"></div>
+                <div class="mini-nav-links">
+                  <div class="mini-nav-link"></div>
+                  <div class="mini-nav-link"></div>
+                  <div class="mini-nav-link"></div>
+                </div>
+              </div>
+              <div class="mini-hero">
+                <div class="mini-hero-text"></div>
+                <div class="mini-hero-search"></div>
+              </div>
+              <div class="mini-cards">
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+                <div class="mini-card"></div>
+              </div>
+            </div>
+            <span class="mini-frames-label">4 frames</span>
+          </div>
+          <div class="wf-project-body">
+            <div class="wf-project-client">NorthStar Homes</div>
+            <h2 class="wf-project-title">Website Redesign</h2>
+            <p class="wf-project-desc">Full redesign of a premium property portal — homepage, search & listings, property detail, and agent profile. Core user journey from discovery through to agent contact.</p>
+            <div class="wf-project-meta">
+              <span>Prepared April 2026</span>
+              <span>·</span>
+              <span>Paperclip Web</span>
+            </div>
+            <div class="wf-project-frames" aria-label="Wireframe screens">
+              <span class="wf-frame-tag">Homepage</span>
+              <span class="wf-frame-tag">Listings</span>
+              <span class="wf-frame-tag">Property Detail</span>
+              <span class="wf-frame-tag">Agent Profile</span>
+            </div>
+            <a href="viewer.html?project=northstar-homes&frame=homepage" class="wf-project-cta">
+              View wireframes →
+            </a>
+          </div>
+        </article>
+
+        <!-- Empty state / placeholder for future clients -->
+        <div class="wf-empty" role="status">
+          <div style="font-size:32px;margin-bottom:12px;opacity:0.3">⊕</div>
+          <strong>Your project here</strong><br>
+          We'll add your wireframe set here when your project kicks off.<br>
+          <a href="../index.html#contact" style="color:var(--color-accent);margin-top:8px;display:inline-block">Start a project →</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="wf-how container">
+      <h2 class="wf-how__title">How we use wireframes</h2>
+      <p class="wf-how__sub">Wireframes come early in our process — they save time and align everyone before development begins.</p>
+      <div class="wf-how__grid">
+        <div class="wf-how__item">
+          <div class="wf-how__num">01</div>
+          <div class="wf-how__item-title">Structure first</div>
+          <div class="wf-how__item-body">We map out every page's layout and content hierarchy before touching colour, typography, or imagery.</div>
+        </div>
+        <div class="wf-how__item">
+          <div class="wf-how__num">02</div>
+          <div class="wf-how__item-title">Review & annotate</div>
+          <div class="wf-how__item-body">Each wireframe includes numbered annotations explaining the reasoning behind every design decision.</div>
+        </div>
+        <div class="wf-how__item">
+          <div class="wf-how__num">03</div>
+          <div class="wf-how__item-title">Iterate quickly</div>
+          <div class="wf-how__item-body">Changes at the wireframe stage take hours, not days. We refine until the structure feels exactly right.</div>
+        </div>
+        <div class="wf-how__item">
+          <div class="wf-how__num">04</div>
+          <div class="wf-how__item-title">Confident build</div>
+          <div class="wf-how__item-body">Once wireframes are approved, development moves fast — there are no structural surprises mid-build.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="border-top:1px solid var(--color-border);padding:32px 0;text-align:center;">
+    <div class="container" style="font-size:13px;color:var(--color-text-muted)">
+      © 2026 Paperclip Web — <a href="../index.html" style="color:var(--color-accent)">Back to main site</a>
+    </div>
+  </footer>
+
+</body>
+</html>
